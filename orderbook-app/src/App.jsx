@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "./components/ui/select";
 
-// Symbol setup
 const symbolsFromPDF = [
   "OPAI",
   "DATB",
@@ -129,38 +128,33 @@ const symbolMap = Object.fromEntries(
   ])
 );
 
-// Layout with Outlet
 const Layout = () => {
-  console.log("Layout rendered");
   return (
-    <div className="flex h-screen">
-      <aside className="w-64 bg-slate-900 text-white p-4 space-y-4">
-        <h1 className="text-xl font-bold mb-4">
+    <div className="app-layout">
+      <aside className="sidebar">
+        <h1 className="brand">
           Monark Markets<sup>®</sup>
         </h1>
-        <nav className="space-y-2">
-          <Link to="/" className="block">
+        <nav className="nav">
+          <Link to="/" className="nav-link">
             My Orders
           </Link>
-          <Link to="/market-view" className="block">
+          <Link to="/market-view" className="nav-link">
             Market View
           </Link>
-          <Link to="/symbols" className="block">
+          <Link to="/symbols" className="nav-link">
             Symbols
           </Link>
         </nav>
       </aside>
-      <main className="flex-1 p-6 overflow-y-auto bg-slate-800 text-white">
+      <main className="content">
         <Outlet />
       </main>
     </div>
   );
 };
 
-// Pages
 const MarketOrderPage = () => {
-  console.log("MarketOrderPage rendered");
-
   const [formData, setFormData] = React.useState({
     symbol: "",
     side: "",
@@ -248,9 +242,7 @@ const MarketOrderPage = () => {
           value={formData.side}
           onValueChange={(value) => handleChange("side", value)}
         >
-          <option value="" disabled>
-            Side
-          </option>
+          <SelectValue placeholder="Side" />
           <SelectItem value="buy">Buy</SelectItem>
           <SelectItem value="sell">Sell</SelectItem>
         </Select>
@@ -279,15 +271,15 @@ const MarketOrderPage = () => {
         />
       </div>
 
-      <div className="flex items-center space-x-4">
-        <label className="flex items-center space-x-2">
+      <div className="flex items-center gap-4">
+        <label className="flex items-center gap-2">
           <Checkbox
             checked={formData.direct}
             onCheckedChange={(checked) => handleChange("direct", checked)}
           />
           <span>Direct to Party</span>
         </label>
-        <label className="flex items-center space-x-2">
+        <label className="flex items-center gap-2">
           <Checkbox
             checked={formData.spv}
             onCheckedChange={(checked) => handleChange("spv", checked)}
@@ -315,14 +307,14 @@ const MarketOrderPage = () => {
             value={formData.carry}
             onChange={(e) => handleChange("carry", e.target.value)}
           />
-          <label className="flex items-center space-x-2">
+          <label className="flex items-center gap-2">
             <Checkbox
               checked={formData.riaManaged}
               onCheckedChange={(checked) => handleChange("riaManaged", checked)}
             />
             <span>RIA/ERA Managed?</span>
           </label>
-          <label className="flex items-center space-x-2">
+          <label className="flex items-center gap-2">
             <Checkbox
               checked={formData.doubleLayer}
               onCheckedChange={(checked) =>
@@ -331,14 +323,14 @@ const MarketOrderPage = () => {
             />
             <span>Double Layer?</span>
           </label>
-          <label className="flex items-center space-x-2">
+          <label className="flex items-center gap-2">
             <Checkbox
               checked={formData.audits}
               onCheckedChange={(checked) => handleChange("audits", checked)}
             />
             <span>Audits Available?</span>
           </label>
-          <label className="flex items-center space-x-2">
+          <label className="flex items-center gap-2">
             <Checkbox
               checked={formData.dataroom}
               onCheckedChange={(checked) => handleChange("dataroom", checked)}
@@ -357,14 +349,11 @@ const MarketOrderPage = () => {
         value={formData.visibility}
         onValueChange={(value) => handleChange("visibility", value)}
       >
-        <option value="" disabled>
-          Visibility
-        </option>
+        <SelectValue placeholder="Visibility" />
         <SelectItem value="quiet">Quiet</SelectItem>
         <SelectItem value="loud">Loud</SelectItem>
         <SelectItem value="silent">Silent</SelectItem>
       </Select>
-
       <Input
         placeholder="Order Minimums (optional)"
         value={formData.minimum}
@@ -399,7 +388,7 @@ const MarketViewPage = () => {
     <div className="space-y-6">
       {Object.entries(grouped).map(([symbol, orders]) => (
         <Card key={symbol}>
-          <CardContent className="p-4">
+          <CardContent>
             <h3 className="text-xl font-bold mb-2">{symbol}</h3>
             <table className="w-full text-left">
               <thead>
@@ -414,7 +403,7 @@ const MarketViewPage = () => {
                 {orders.map((order, idx) => (
                   <tr
                     key={idx}
-                    className="border-t border-slate-700 cursor-pointer hover:bg-slate-700"
+                    className="cursor-pointer"
                     onClick={() => {
                       setSelectedOrder(order);
                       setShowModal(true);
@@ -432,8 +421,8 @@ const MarketViewPage = () => {
         </Card>
       ))}
       {showModal && selectedOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white text-black p-6 rounded-lg max-w-lg w-full space-y-2">
+        <div className="modal-overlay">
+          <div className="modal-content">
             <h3 className="text-xl font-bold mb-2">Order Details</h3>
             {Object.entries(selectedOrder).map(([key, val]) => (
               <div key={key} className="text-sm">
@@ -458,7 +447,6 @@ const SymbolsPage = () => {
     const fromStorage = localStorage.getItem("symbols");
     return fromStorage ? JSON.parse(fromStorage) : symbolsFromPDF;
   });
-
   const [newSymbol, setNewSymbol] = React.useState("");
 
   const addSymbol = () => {
@@ -476,9 +464,9 @@ const SymbolsPage = () => {
       <ul className="grid grid-cols-2 gap-2">
         {symbols.map((sym) => (
           <Link
+            key={sym}
             to={`/market-view?symbol=${sym}`}
             className="underline"
-            key={sym}
           >
             {sym}
           </Link>
@@ -498,9 +486,7 @@ const SymbolsPage = () => {
   );
 };
 
-// Final App component
 const App = () => {
-  console.log("App rendered");
   return (
     <Router>
       <Routes>
