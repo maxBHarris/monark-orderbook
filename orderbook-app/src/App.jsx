@@ -1,9 +1,10 @@
 import React from "react";
 import {
   BrowserRouter as Router,
-  Route,
   Routes,
+  Route,
   Link,
+  Outlet,
   useNavigate,
 } from "react-router-dom";
 import { Input } from "./components/ui/input";
@@ -18,8 +19,8 @@ import {
   SelectItem,
   SelectValue,
 } from "./components/ui/select";
-import { Outlet } from "react-router-dom";
 
+// Symbol setup
 const symbolsFromPDF = [
   "OPAI",
   "DATB",
@@ -128,6 +129,7 @@ const symbolMap = Object.fromEntries(
   ])
 );
 
+// Layout with Outlet
 const Layout = () => (
   <div className="flex h-screen">
     <aside className="w-64 bg-slate-900 text-white p-4 space-y-4">
@@ -152,7 +154,7 @@ const Layout = () => (
   </div>
 );
 
-// Placeholder for MarketOrderPage component
+// Pages
 const MarketOrderPage = () => {
   const [formData, setFormData] = React.useState({
     symbol: "",
@@ -273,6 +275,7 @@ const MarketOrderPage = () => {
           onChange={(e) => handleChange("valuation", e.target.value)}
         />
       </div>
+
       <div className="flex items-center space-x-4">
         <label className="flex items-center space-x-2">
           <Checkbox
@@ -289,6 +292,7 @@ const MarketOrderPage = () => {
           <span>SPV</span>
         </label>
       </div>
+
       {formData.direct && (
         <Input
           placeholder="Share Class (if direct)"
@@ -340,6 +344,7 @@ const MarketOrderPage = () => {
           </label>
         </div>
       )}
+
       <Textarea
         placeholder="General Notes"
         value={formData.notes}
@@ -368,7 +373,6 @@ const MarketOrderPage = () => {
   );
 };
 
-// Placeholder for MarketViewPage component
 const MarketViewPage = () => {
   const [orders, setOrders] = React.useState(() =>
     JSON.parse(localStorage.getItem("marketOrders") || "[]")
@@ -376,7 +380,6 @@ const MarketViewPage = () => {
   const [selectedOrder, setSelectedOrder] = React.useState(null);
   const [showModal, setShowModal] = React.useState(false);
 
-  // orders are now managed by useState
   const grouped = orders.reduce((acc, order) => {
     if (!acc[order.symbol]) acc[order.symbol] = [];
     acc[order.symbol].push(order);
@@ -388,11 +391,6 @@ const MarketViewPage = () => {
     localStorage.setItem("marketOrders", JSON.stringify(updated));
     setOrders(updated);
     setShowModal(false);
-  };
-
-  const handleClickOrder = (order) => {
-    setSelectedOrder(order);
-    setShowModal(true);
   };
 
   return (
@@ -415,7 +413,10 @@ const MarketViewPage = () => {
                   <tr
                     key={idx}
                     className="border-t border-slate-700 cursor-pointer hover:bg-slate-700"
-                    onClick={() => handleClickOrder(order)}
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setShowModal(true);
+                    }}
                   >
                     <td>{order.side.toUpperCase()}</td>
                     <td>${parseFloat(order.price).toLocaleString()}</td>
@@ -450,7 +451,6 @@ const MarketViewPage = () => {
   );
 };
 
-// Placeholder for SymbolsPage component
 const SymbolsPage = () => {
   const [symbols, setSymbols] = React.useState(() => {
     const fromStorage = localStorage.getItem("symbols");
@@ -496,12 +496,15 @@ const SymbolsPage = () => {
   );
 };
 
+// Final App component
 const App = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<MarketOrderPage />} />
-      <Route path="/market-view" element={<MarketViewPage />} />
-      <Route path="/symbols" element={<SymbolsPage />} />
+      <Route path="/" element={<Layout />}>
+        <Route index element={<MarketOrderPage />} />
+        <Route path="market-view" element={<MarketViewPage />} />
+        <Route path="symbols" element={<SymbolsPage />} />
+      </Route>
     </Routes>
   </Router>
 );
