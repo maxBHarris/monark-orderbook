@@ -6,22 +6,120 @@ import {
   Link,
   useNavigate,
 } from "react-router-dom";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "./components/ui/input";
+import { Button } from "./components/ui/button";
+import { Card, CardContent } from "./components/ui/card";
+import { Textarea } from "./components/ui/textarea";
+import { Checkbox } from "./components/ui/checkbox";
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
+} from "./components/ui/select";
 
-// --- symbol data ---
-const symbolsFromPDF = ["OPAI", "DATB", "XAAI", "ANTH"];
+const symbolsFromPDF = [
+  "OPAI",
+  "DATB",
+  "XAAI",
+  "ANTH",
+  "STRI",
+  "REMA",
+  "SPAX",
+  "KLAR",
+  "EPGA",
+  "ANIN",
+  "FANA",
+  "RESP",
+  "RAPP",
+  "CHIM",
+  "RIPP",
+  "NETS",
+  "DTMR",
+  "AIR",
+  "NURO",
+  "BREX",
+  "ZIPL",
+  "DATO",
+  "TATE",
+  "ETTO",
+  "GLEA",
+  "LIDE",
+  "WORR",
+  "FLEP",
+  "EQSH",
+  "NEUR",
+  "GROQ",
+  "SANS",
+  "ROOF",
+  "CIRC",
+  "IMPF",
+  "COHS",
+  "BRAC",
+  "CIHE",
+  "VERC",
+  "ATTE",
+  "PLAI",
+  "SIXS",
+  "SCAI",
+  "PSIQ",
+  "CONS",
+  "EAJU",
+  "FLOQ",
+  "AXSP",
+  "PATR",
+  "BIGI",
+  "RAMP",
+  "ZOCD",
+  "CESY",
+  "GREE",
+  "SHAI",
+  "DISO",
+  "PEAI",
+  "AUAN",
+  "BLOO",
+  "FABN",
+  "LAMD",
+  "LIG",
+  "THSP",
+  "WHOO",
+  "SAAQ",
+  "FIGR",
+  "HTWO",
+  "ADDE",
+  "COLH",
+  "NEFJ",
+  "VECR",
+  "MAPB",
+  "UPGR",
+  "CHAA",
+  "RIPL",
+  "MAFT",
+  "TURO",
+  "SNAL",
+  "HARN",
+  "ARWO",
+  "OUTR",
+  "GERO",
+  "TANI",
+  "MERC",
+  "MOTV",
+  "WORA",
+  "REPI",
+  "SIFT",
+  "SIST",
+  "DRAG",
+  "GUID",
+  "POSM",
+  "FIGM",
+  "DIFO",
+  "EISL",
+  "SESC",
+  "THFD",
+  "INTC",
+];
+
 const symbolMap = Object.fromEntries(
   symbolsFromPDF.flatMap((sym) => [
     [sym, sym],
@@ -29,7 +127,6 @@ const symbolMap = Object.fromEntries(
   ])
 );
 
-// --- layout ---
 const Layout = ({ children }) => (
   <div className="flex h-screen">
     <aside className="w-64 bg-slate-900 text-white p-4 space-y-4">
@@ -54,7 +151,7 @@ const Layout = ({ children }) => (
   </div>
 );
 
-// --- page: new order ---
+// Placeholder for MarketOrderPage component
 const MarketOrderPage = () => {
   const [formData, setFormData] = React.useState({
     symbol: "",
@@ -115,12 +212,9 @@ const MarketOrderPage = () => {
       createdAt: new Date().toISOString(),
       ageDays: 0,
     };
-    let existingOrders = [];
-    try {
-      existingOrders = JSON.parse(localStorage.getItem("marketOrders") || "[]");
-    } catch (err) {
-      console.error("Error reading orders from localStorage:", err);
-    }
+    const existingOrders = JSON.parse(
+      localStorage.getItem("marketOrders") || "[]"
+    );
     localStorage.setItem(
       "marketOrders",
       JSON.stringify([...existingOrders, newOrder])
@@ -144,7 +238,7 @@ const MarketOrderPage = () => {
         />
         <Select
           value={formData.side}
-          onValueChange={(v) => handleChange("side", v)}
+          onValueChange={(value) => handleChange("side", value)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Side" />
@@ -178,24 +272,22 @@ const MarketOrderPage = () => {
           onChange={(e) => handleChange("valuation", e.target.value)}
         />
       </div>
-
       <div className="flex items-center space-x-4">
         <label className="flex items-center space-x-2">
           <Checkbox
             checked={formData.direct}
-            onCheckedChange={(val) => handleChange("direct", val)}
+            onCheckedChange={(checked) => handleChange("direct", checked)}
           />
           <span>Direct to Party</span>
         </label>
         <label className="flex items-center space-x-2">
           <Checkbox
             checked={formData.spv}
-            onCheckedChange={(val) => handleChange("spv", val)}
+            onCheckedChange={(checked) => handleChange("spv", checked)}
           />
           <span>SPV</span>
         </label>
       </div>
-
       {formData.direct && (
         <Input
           placeholder="Share Class (if direct)"
@@ -203,7 +295,6 @@ const MarketOrderPage = () => {
           onChange={(e) => handleChange("shareClass", e.target.value)}
         />
       )}
-
       {formData.spv && (
         <div className="grid grid-cols-2 gap-4">
           <Input
@@ -219,43 +310,43 @@ const MarketOrderPage = () => {
           <label className="flex items-center space-x-2">
             <Checkbox
               checked={formData.riaManaged}
-              onCheckedChange={(v) => handleChange("riaManaged", v)}
+              onCheckedChange={(checked) => handleChange("riaManaged", checked)}
             />
             <span>RIA/ERA Managed?</span>
           </label>
           <label className="flex items-center space-x-2">
             <Checkbox
               checked={formData.doubleLayer}
-              onCheckedChange={(v) => handleChange("doubleLayer", v)}
+              onCheckedChange={(checked) =>
+                handleChange("doubleLayer", checked)
+              }
             />
             <span>Double Layer?</span>
           </label>
           <label className="flex items-center space-x-2">
             <Checkbox
               checked={formData.audits}
-              onCheckedChange={(v) => handleChange("audits", v)}
+              onCheckedChange={(checked) => handleChange("audits", checked)}
             />
             <span>Audits Available?</span>
           </label>
           <label className="flex items-center space-x-2">
             <Checkbox
               checked={formData.dataroom}
-              onCheckedChange={(v) => handleChange("dataroom", v)}
+              onCheckedChange={(checked) => handleChange("dataroom", checked)}
             />
             <span>Full Dataroom?</span>
           </label>
         </div>
       )}
-
       <Textarea
         placeholder="General Notes"
         value={formData.notes}
         onChange={(e) => handleChange("notes", e.target.value)}
       />
-
       <Select
         value={formData.visibility}
-        onValueChange={(v) => handleChange("visibility", v)}
+        onValueChange={(value) => handleChange("visibility", value)}
       >
         <SelectTrigger>
           <SelectValue placeholder="Visibility" />
@@ -266,26 +357,151 @@ const MarketOrderPage = () => {
           <SelectItem value="silent">Silent</SelectItem>
         </SelectContent>
       </Select>
-
       <Input
         placeholder="Order Minimums (optional)"
         value={formData.minimum}
         onChange={(e) => handleChange("minimum", e.target.value)}
       />
-
       <Button onClick={handleSubmit}>Submit</Button>
     </div>
   );
 };
 
-// You can add MarketViewPage + SymbolsPage back here as well, just like above
+// Placeholder for MarketViewPage component
+const MarketViewPage = () => {
+  const [orders, setOrders] = React.useState(() =>
+    JSON.parse(localStorage.getItem("marketOrders") || "[]")
+  );
+  const [selectedOrder, setSelectedOrder] = React.useState(null);
+  const [showModal, setShowModal] = React.useState(false);
+
+  // orders are now managed by useState
+  const grouped = orders.reduce((acc, order) => {
+    if (!acc[order.symbol]) acc[order.symbol] = [];
+    acc[order.symbol].push(order);
+    return acc;
+  }, {});
+
+  const handleCancelOrder = () => {
+    const updated = orders.filter((o) => o !== selectedOrder);
+    localStorage.setItem("marketOrders", JSON.stringify(updated));
+    setOrders(updated);
+    setShowModal(false);
+  };
+
+  const handleClickOrder = (order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
+  return (
+    <div className="space-y-6">
+      {Object.entries(grouped).map(([symbol, orders]) => (
+        <Card key={symbol}>
+          <CardContent className="p-4">
+            <h3 className="text-xl font-bold mb-2">{symbol}</h3>
+            <table className="w-full text-left">
+              <thead>
+                <tr>
+                  <th>Side</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order, idx) => (
+                  <tr
+                    key={idx}
+                    className="border-t border-slate-700 cursor-pointer hover:bg-slate-700"
+                    onClick={() => handleClickOrder(order)}
+                  >
+                    <td>{order.side.toUpperCase()}</td>
+                    <td>${parseFloat(order.price).toLocaleString()}</td>
+                    <td>{parseInt(order.quantity).toLocaleString()}</td>
+                    <td>{order.ageDays <= 7 ? "Live" : "Inquire"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+      ))}
+      {showModal && selectedOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white text-black p-6 rounded-lg max-w-lg w-full space-y-2">
+            <h3 className="text-xl font-bold mb-2">Order Details</h3>
+            {Object.entries(selectedOrder).map(([key, val]) => (
+              <div key={key} className="text-sm">
+                <strong>{key}:</strong> {String(val)}
+              </div>
+            ))}
+            <div className="flex gap-2 pt-4 justify-end">
+              <Button variant="destructive" onClick={handleCancelOrder}>
+                Cancel Order
+              </Button>
+              <Button onClick={() => setShowModal(false)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Placeholder for SymbolsPage component
+const SymbolsPage = () => {
+  const [symbols, setSymbols] = React.useState(() => {
+    const fromStorage = localStorage.getItem("symbols");
+    return fromStorage ? JSON.parse(fromStorage) : symbolsFromPDF;
+  });
+
+  const [newSymbol, setNewSymbol] = React.useState("");
+
+  const addSymbol = () => {
+    if (newSymbol && !symbols.includes(newSymbol)) {
+      const updated = [...symbols, newSymbol];
+      setSymbols(updated);
+      localStorage.setItem("symbols", JSON.stringify(updated));
+    }
+    setNewSymbol("");
+  };
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold">Symbols</h2>
+      <ul className="grid grid-cols-2 gap-2">
+        {symbols.map((sym) => (
+          <Link
+            to={`/market-view?symbol=${sym}`}
+            className="underline"
+            key={sym}
+          >
+            {sym}
+          </Link>
+        ))}
+      </ul>
+      <div className="mt-4">
+        <Input
+          placeholder="Add New Symbol"
+          value={newSymbol}
+          onChange={(e) => setNewSymbol(e.target.value.toUpperCase())}
+        />
+        <Button className="ml-2" onClick={addSymbol}>
+          Add
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 const App = () => (
   <Router>
     <Layout>
       <Routes>
         <Route path="/" element={<MarketOrderPage />} />
-        {/* Add <Route path="/market-view" ...> and <Route path="/symbols" ...> here if needed */}
+        <Route path="/market-view" element={<MarketViewPage />} />
+        <Route path="/symbols" element={<SymbolsPage />} />
       </Routes>
     </Layout>
   </Router>
