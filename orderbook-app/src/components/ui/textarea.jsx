@@ -1,3 +1,5 @@
+import React from "react";
+
 // textarea.js
 export const Textarea = ({ ...props }) => (
   <textarea

@@ -1,3 +1,5 @@
+import React from "react";
+
 // input.js
 export const Input = ({ ...props }) => (
   <input

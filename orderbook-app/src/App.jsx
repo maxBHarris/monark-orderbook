@@ -130,32 +130,37 @@ const symbolMap = Object.fromEntries(
 );
 
 // Layout with Outlet
-const Layout = () => (
-  <div className="flex h-screen">
-    <aside className="w-64 bg-slate-900 text-white p-4 space-y-4">
-      <h1 className="text-xl font-bold mb-4">
-        Monark Markets<sup>®</sup>
-      </h1>
-      <nav className="space-y-2">
-        <Link to="/" className="block">
-          My Orders
-        </Link>
-        <Link to="/market-view" className="block">
-          Market View
-        </Link>
-        <Link to="/symbols" className="block">
-          Symbols
-        </Link>
-      </nav>
-    </aside>
-    <main className="flex-1 p-6 overflow-y-auto bg-slate-800 text-white">
-      <Outlet />
-    </main>
-  </div>
-);
+const Layout = () => {
+  console.log("Layout rendered");
+  return (
+    <div className="flex h-screen">
+      <aside className="w-64 bg-slate-900 text-white p-4 space-y-4">
+        <h1 className="text-xl font-bold mb-4">
+          Monark Markets<sup>®</sup>
+        </h1>
+        <nav className="space-y-2">
+          <Link to="/" className="block">
+            My Orders
+          </Link>
+          <Link to="/market-view" className="block">
+            Market View
+          </Link>
+          <Link to="/symbols" className="block">
+            Symbols
+          </Link>
+        </nav>
+      </aside>
+      <main className="flex-1 p-6 overflow-y-auto bg-slate-800 text-white">
+        <Outlet />
+      </main>
+    </div>
+  );
+};
 
 // Pages
 const MarketOrderPage = () => {
+  console.log("MarketOrderPage rendered");
+
   const [formData, setFormData] = React.useState({
     symbol: "",
     side: "",
@@ -243,13 +248,11 @@ const MarketOrderPage = () => {
           value={formData.side}
           onValueChange={(value) => handleChange("side", value)}
         >
-          <SelectTrigger>
-            <SelectValue placeholder="Side" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="buy">Buy</SelectItem>
-            <SelectItem value="sell">Sell</SelectItem>
-          </SelectContent>
+          <option value="" disabled>
+            Side
+          </option>
+          <SelectItem value="buy">Buy</SelectItem>
+          <SelectItem value="sell">Sell</SelectItem>
         </Select>
         <Input
           type="number"
@@ -354,15 +357,14 @@ const MarketOrderPage = () => {
         value={formData.visibility}
         onValueChange={(value) => handleChange("visibility", value)}
       >
-        <SelectTrigger>
-          <SelectValue placeholder="Visibility" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="quiet">Quiet</SelectItem>
-          <SelectItem value="loud">Loud</SelectItem>
-          <SelectItem value="silent">Silent</SelectItem>
-        </SelectContent>
+        <option value="" disabled>
+          Visibility
+        </option>
+        <SelectItem value="quiet">Quiet</SelectItem>
+        <SelectItem value="loud">Loud</SelectItem>
+        <SelectItem value="silent">Silent</SelectItem>
       </Select>
+
       <Input
         placeholder="Order Minimums (optional)"
         value={formData.minimum}
@@ -497,16 +499,19 @@ const SymbolsPage = () => {
 };
 
 // Final App component
-const App = () => (
-  <Router>
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<MarketOrderPage />} />
-        <Route path="market-view" element={<MarketViewPage />} />
-        <Route path="symbols" element={<SymbolsPage />} />
-      </Route>
-    </Routes>
-  </Router>
-);
+const App = () => {
+  console.log("App rendered");
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<MarketOrderPage />} />
+          <Route path="market-view" element={<MarketViewPage />} />
+          <Route path="symbols" element={<SymbolsPage />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+};
 
 export default App;
