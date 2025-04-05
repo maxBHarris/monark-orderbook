@@ -18,6 +18,7 @@ import {
   SelectItem,
   SelectValue,
 } from "./components/ui/select";
+import { Outlet } from "react-router-dom";
 
 const symbolsFromPDF = [
   "OPAI",
@@ -127,7 +128,7 @@ const symbolMap = Object.fromEntries(
   ])
 );
 
-const Layout = ({ children }) => (
+const Layout = () => (
   <div className="flex h-screen">
     <aside className="w-64 bg-slate-900 text-white p-4 space-y-4">
       <h1 className="text-xl font-bold mb-4">
@@ -146,7 +147,7 @@ const Layout = ({ children }) => (
       </nav>
     </aside>
     <main className="flex-1 p-6 overflow-y-auto bg-slate-800 text-white">
-      {children}
+      <Outlet />
     </main>
   </div>
 );
@@ -497,13 +498,11 @@ const SymbolsPage = () => {
 
 const App = () => (
   <Router>
-    <Layout>
-      <Routes>
-        <Route path="/" element={<MarketOrderPage />} />
-        <Route path="/market-view" element={<MarketViewPage />} />
-        <Route path="/symbols" element={<SymbolsPage />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      <Route path="/" element={<MarketOrderPage />} />
+      <Route path="/market-view" element={<MarketViewPage />} />
+      <Route path="/symbols" element={<SymbolsPage />} />
+    </Routes>
   </Router>
 );
 
