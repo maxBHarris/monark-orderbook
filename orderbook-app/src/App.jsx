@@ -496,15 +496,9 @@ const SymbolsPage = () => {
 };
 
 const App = () => (
-  <Router>
-    <Layout>
-      <Routes>
-        <Route path="/" element={<MarketOrderPage />} />
-        <Route path="/market-view" element={<MarketViewPage />} />
-        <Route path="/symbols" element={<SymbolsPage />} />
-      </Routes>
-    </Layout>
-  </Router>
+  <div style={{ padding: "2rem", fontSize: "24px", color: "#333" }}>
+    Hello World 🌎 — App is Rendering!
+  </div>
 );
 
 export default App;
