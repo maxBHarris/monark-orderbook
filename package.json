@@ -4,9 +4,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:css": "tailwindcss -i ./src/tailwind-input.css -o ./src/style.css"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.0.0"
